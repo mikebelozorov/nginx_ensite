@@ -1,4 +1,4 @@
-#!/usr/bin/env bash
+#!/bin/bash
 
 ### nginx_ensite --- Bash script to enable or disable a site in nginx.
 
@@ -72,7 +72,8 @@ STARTUP_PROGRAM_NAME=$(get_startup_program_name)
 ## $2: available sites directory name (usually sites-available)
 ## Returns the relative path from the sites-enabled directory.
 function make_relative_path() {
-    printf '../%.0s%s/%s' $(eval echo {0..$(expr length "${1//[^\/]/}")}) $2 $1
+    printf '../%s/%s' $2 $1
+    #printf '../%.0s%s/%s' $(eval echo {0..$(expr length "${1//[^\/]/}")}) $2 $1
 }
 
 ## Checking the type of action we will perform. Enabling or disabling.
@@ -129,7 +130,8 @@ else
     if [ $1 == "default" ]; then
         SITE_ENABLED="$ENABLED_SITES_PATH/default"
     else
-        SITE_ENABLED="$ENABLED_SITES_PATH/$1"
+	ADDR=$(echo "$1" | sed -r 's/\//-/')
+        SITE_ENABLED="$ENABLED_SITES_PATH/$ADDR"
     fi
     ## Check if the directory where we will place the symlink
     ## exists. If not create it.
